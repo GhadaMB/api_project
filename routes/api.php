@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\VerificationController;
+use App\Http\Controllers\Api\resetPasswordController;
 
 
 /*
@@ -27,3 +28,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::get('/email/resend', [VerificationController::class, 'resend'])->middleware('auth:sanctum')->name('verification.resend');
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->middleware('auth:sanctum')->name('verification.verify');
+
+Route::post('/forget-password', [resetPasswordController::class, 'forgotPassword']);
+Route::post('/reset-password', [resetPasswordController::class, 'reset'])->name('password.reset');

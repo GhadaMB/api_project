@@ -60,92 +60,56 @@ class AuthController extends Controller
 
     }
 
-
     // Login user
-    /*public function login(Request $request){
+    public function login(LoginRequest $request)
+    {
         try{
-            // Validated
-            $data = Validator::make($request->all(),
-                [
-                    'email' => 'required|email',
-                    'password' => 'required'
-                ]);
+            $request->authenticate();
 
-            // Error validator
-            if($data->fails()){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'validation error',
-                    'errors' => $data->errors()
-                ], 401);
-            }
-            // Email & passowed doesn't match
-            if(!auth()->attempt(['email'=>$request->email, 'password'=> $request->password])) {
-                return response(['message'=>'Invalid credentials']);
-            }
-
-            // Get user
-            $accessToken = auth()->user()->createToken('authToken')->accessToken;
-
-            $user = User::query()->where('email',$request->email);
-            if ($user->hasVerifiedEmail()) {
-                return response(['user' => auth()->user(), 'access_token' => $accessToken]);
-
-            } else {
+            $user = $request->user();
+            if($user->email_verified_at == null){
                 return response()->json([
                     'status' => 'login error',
                     'message' => 'please verify your email'
                 ]);
+            } else {
+                $token = $request->user()->createToken('authtoken');
+
+                return response()->json(
+                    [
+                        'message'=>'Logged in',
+                        'data'=> [
+                            'user'=> $request->user(),
+                            'token'=> $token->plainTextToken
+                        ]
+                    ]
+                );
             }
-
-
         } catch (\Throwable $th){
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
             ], 500);
         }
-    }*/
-
-    public function login(LoginRequest $request)
-    {
-        $request->authenticate();
-
-        $user = $request->user();
-        if($user->email_verified_at == null){
-            return response()->json([
-                'status' => 'login error',
-                'message' => 'please verify your email'
-            ]);
-        } else {
-            $token = $request->user()->createToken('authtoken');
-
-            return response()->json(
-                [
-                    'message'=>'Logged in',
-                    'data'=> [
-                        'user'=> $request->user(),
-                        'token'=> $token->plainTextToken
-                    ]
-                ]
-            );
-        }
-
 
     }
 
     public function logout(Request $request)
     {
+        try{
+            $request->user()->tokens()->delete();
 
-        $request->user()->tokens()->delete();
-
-        return response()->json(
-            [
-                'message' => 'Logged out'
-            ]
-        );
-
+            return response()->json(
+                [
+                    'message' => 'Logged out'
+                ]
+            );
+        } catch (\Throwable $th){
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
-
 
 }
