@@ -246,7 +246,9 @@ class ProductController extends Controller
             }
 
             $product = Product::findOrFail($id);
-            $product->update(['user_id',$request->user_id]);
+            $product->user_id = $request->user_id;
+
+            $product->save();
 
             return response()->json([
                'status' => true,
