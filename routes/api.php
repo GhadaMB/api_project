@@ -36,11 +36,11 @@ Route::middleware(['auth:sanctum'])->group( function (){
         return $request->user();
     });
     Route::post('/profile', [ProfileController::class, 'update']);
+    Route::resource('products', ProductController::class)->middleware('restrictRole');
+    Route::post('products/{id}', [ProductController::class, 'update'])->middleware('restrictRole');
+
+    Route::post('assign-user/{product_id}', [ProductController::class, 'assignToUser'])->middleware('restrictRole');
+    Route::get('get-user-product/{user_id}', [ProductController::class, 'getUserProducts']);
 
 });
 
-Route::resource('products', ProductController::class);
-Route::post('products/{id}', [ProductController::class, 'update']);
-
-Route::post('assign-user/{product_id}', [ProductController::class, 'assignToUser']);
-Route::get('get-user-product/{user_id}', [ProductController::class, 'getUserProducts']);
