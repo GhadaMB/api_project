@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\resetPasswordController;
+use App\Http\Controllers\Api\VerificationController;
+use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\VerificationController;
-use App\Http\Controllers\Api\resetPasswordController;
-use App\Http\Controllers\Api\ProfileController;
 
 
 /*
@@ -37,3 +38,9 @@ Route::middleware(['auth:sanctum'])->group( function (){
     Route::post('/profile', [ProfileController::class, 'update']);
 
 });
+
+Route::resource('products', ProductController::class);
+Route::post('products/{id}', [ProductController::class, 'update']);
+
+Route::post('assign-user/{product_id}', [ProductController::class, 'assignToUser']);
+Route::get('get-user-product/{user_id}', [ProductController::class, 'getUserProducts']);
