@@ -62,3 +62,19 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## About Project
+
+Laravel project with an admin dashboard using Laravel/PHP
+and API.
+Used bearer token to authorize requests and roles for Admin
+and User.
+It contains API requests for registration, login and logout using
+Sanctum, in addition to email verification and reset password.
+Admin can manage products in the application (add, edit,
+delete, update) CRUD, and can assign a product to user, in the
+dashboard and implemented in API.
+User can get and update his information, and can show the
+products assigned to him.
+Used Datatable to listing items.
+
